@@ -4,24 +4,24 @@ import joblib
 df = pd.read_csv('Titanic-Dataset.csv')
 
 
-# Step 1 — Drop useless columns
+#  Drop useless columns
 df = df.drop(['PassengerId', 'Ticket', 'Cabin', 'Name'], axis=1)
 
-# Step 2 — Fix missing values
+#  — Fix missing values
 df['Age'] = df['Age'].fillna(df['Age'].median())      # median, not mean (why? outliers)
 df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])
 
-# Step 3 — Encode Sex (text → number)
+#  Encode Sex (text → number)
 df['Sex'] = df['Sex'].map({'male': 1, 'female': 0})
 
-# Step 4 — Encode Embarked (3 categories → columns)
+#  Encode Embarked (3 categories → columns)
 df = pd.get_dummies(df, columns=['Embarked'], drop_first=True)
 
-# Step 5 — Engineer 2 new features (your own thinking)
+# Engineer 2 new features (your own thinking)
 df['FamilySize'] = df['SibSp'] + df['Parch'] + 1
 df['IsAlone'] = (df['FamilySize'] == 1).astype(int)
 
-# Check — no missing values should remain
+
 
 
 df['Embarked_Q'] = df['Embarked_Q'].astype(int)
@@ -61,7 +61,7 @@ joblib.dump(rf, 'titanic_model.pkl')
 print("Model saved → titanic_model.pkl")
 
 
-# Test your saved model
+# Test saved model
 import numpy as np
 
 loaded = joblib.load('titanic_model.pkl')
@@ -80,7 +80,7 @@ test_df = pd.read_csv('test.csv')
 # Save passenger IDs for submission file
 passenger_ids = test_df['PassengerId']
 
-# Apply exact same cleaning as training data
+
 test_df = test_df.drop(['PassengerId', 'Ticket', 'Cabin', 'Name'], axis=1)
 test_df['Age'] = test_df['Age'].fillna(test_df['Age'].median())
 test_df['Fare'] = test_df['Fare'].fillna(test_df['Fare'].median())
